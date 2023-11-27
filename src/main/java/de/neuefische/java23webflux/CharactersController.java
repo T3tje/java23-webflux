@@ -57,11 +57,18 @@ public class CharactersController {
         return response.results();
     }
 
-    @GetMapping("/characters/{species-statistic}")
-    private int getStatistics(@PathVariable("species-statistic") String speciesStatistic, @RequestParam String status) {
-        return 1;
+
+    @GetMapping("/characters/species-statistic")
+    private int getStatistics( @RequestParam String species) {
+        CharacterResponse response = Objects.requireNonNull(
+                WebClient.create()
+                        .get()
+                        .uri(rickAndMortyUri+"?species="+species)
+                        .retrieve()
+                        .toEntity(CharacterResponse.class)
+                        .block()
+        ).getBody();
+
+        return response.info().count();
     }
-
-
-
 }
